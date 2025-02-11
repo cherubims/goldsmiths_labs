@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <!-- Search Bar -->
+    <div class="mb-5 d-flex justify-content-center">
+        <div class="input-group" style="max-width: 600px;">
+            <input 
+                type="text" 
+                id="courseSearch" 
+                class="form-control form-control-lg rounded-pill shadow-sm" 
+                placeholder="Search your courses..." 
+                value="{{ search_query|default:'' }}"
+                style="border: 1px solid #ddd; padding: 0.7rem 1rem; font-size: 0.85rem; color: #5a5a5a;"
+            >
+        </div>
+    </div>
+
+    <!-- Enrolled Courses Section -->
+    <h2 class="mb-4 text-center fw-bold" style="font-size: 1.3rem; color:#555">Your Enrolled Courses</h2>
+
+    <div class="row gy-4" id="enrolledCourses">
+        {% for data in enrolled_courses_with_progress %}
+            <div class="col-md-4 d-flex align-items-stretch">
+                <div class="card course-card shadow-sm position-relative">
+                    <!-- Blocked Badge -->
+                    {% if data.is_blocked %}
+                    <span class="badge bg-danger position-absolute" style="top: 10px; left: 10px; font-size: 0.65rem; padding: 0.3rem 0.6rem; border-radius: 12px;">Blocked</span>
+                    {% endif %}
+                    
+                    <!-- Completed Badge -->
+                    {% if data.is_completed %}
+                    <span class="badge bg-success position-absolute" style="top: 10px; right: 10px; font-size: 0.65rem; padding: 0.3rem 0.6rem; border-radius: 12px;">Completed</span>
+                    {% endif %}
+
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold text-secondary mb-3 mt-3">{{ data.course.name }}</h5>
+                        <p class="card-text text-muted flex-grow-1 description" data-full-text="{{ data.course.description }}">
+                            {{ data.course.description|truncatewords:15 }}
+                        </p>
+                        <button class="btn btn-link read-more-btn p-0">Read More</button>
+                        <p class="text-muted small mt-2">Taught by: <span class="fw-semibold">{{ data.course.teacher.username }}</span></p>
+
+                        <!-- Progress Bar -->
+                        {% if not data.is_completed %}
+                        <div class="progress mb-3">
+                            <div class="progress-bar progress-bar-striped bg-info" 
+                                role="progressbar" 
+                                style="width: {{ data.completed_percent|floatformat:2 }}%;" 
+                                aria-valuenow="{{ data.completed_percent }}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between mt-auto">
+                            {% if data.is_blocked %}
+                            <!-- Disabled buttons for blocked students -->
+                            <button class="btn btn-secondary btn-sm" disabled>Blocked</button>
+                            <button class="btn btn-link btn-sm" disabled>Leave Feedback</button>
+                            {% else %}
+                            <!-- Normal actions for non-blocked students -->
+                            <a href="{% url 'course_detail' data.course.id %}" class="btn btn-primary btn-sm">View Course</a>
+                            <a href="{% url 'leave_feedback' data.course.id %}" class="btn btn-success btn-sm">Feedback</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+        <p class="text-muted text-center">You are not enrolled in any courses yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Available Courses Section -->
+    <h2 class="mt-5 mb-4 text-center fw-bold" style="font-size: 1.3rem; color:#555">Available Courses</h2>
+    <div class="row gy-4" id="availableCourses">
+        {% for course in available_courses %}
+        <div class="col-md-4 d-flex align-items-stretch">
+            <div class="card course-card shadow-sm position-relative">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold text-secondary mb-3">{{ course.name }}</h5>
+                    <p class="card-text text-muted flex-grow-1 description" data-full-text="{{ course.description }}">
+                        {{ course.description|truncatewords:15 }}
+                    </p>
+                    <button class="btn btn-link read-more-btn p-0">Read More</button>
+                    <p class="text-muted small mt-2">Taught by: <span class="fw-semibold">{{ course.teacher.username }}</span></p>
+
+                    <div class="d-flex justify-content-between mt-auto">
+                        <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary btn-sm">Enroll</a>
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-secondary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center">No courses available at the moment.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Course Card Styling */
+    .course-card {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 16px;
+        min-height: 280px; /* Increased card height */
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-card:hover {
+        background-color: #e8f5ff; /* Light blue on hover */
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Progress Bar */
+    .progress {
+        height: 8px;
+        border-radius: 5px;
+    }
+
+    /* Badge Styling */
+    .badge {
+        font-size: 0.65rem; /* Smaller font size */
+        padding: 0.3rem 0.6rem; /* Smaller padding */
+        border-radius: 12px; /* Rounder corners */
+        position: absolute;
+        top: 10px;
+        font-weight: 600;
+    }
+
+    /* Block Badge */
+    .badge.bg-danger {
+        background-color: #f44336; /* Red */
+        color: white;
+        left: 10px;
+    }
+
+    /* Completed Badge */
+    .badge.bg-success {
+        background-color: #28a745; /* Green */
+        color: white;
+        right: 10px;
+    }
+
+    /* Text Adjustments */
+    .card-title {
+        font-size: 1.1rem; /* Slightly larger title */
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 12px; /* Added spacing */
+    }
+
+    .card-text {
+        font-size: 0.85rem;
+        color: #5a5a5a; /* Dark grey */
+    }
+
+    /* Buttons */
+    .btn-primary, .btn-success, .btn-secondary {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover, .btn-success:hover, .btn-secondary:hover {
+        filter: brightness(1.1);
+    }
+
+    /* Read More Button */
+    .read-more-btn {
+        font-size: 0.75rem;
+        color: #007bff;
+        text-decoration: none;
+        padding: 0; /* Remove padding */
+    }
+
+    .read-more-btn:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 900px) {
+        .course-card {
+            min-height: 260px; /* Slightly smaller height for smaller screens */
+        }
+
+        .card-title {
+            font-size: 1rem; /* Smaller title on smaller screens */
+        }
+
+        .card-text {
+            font-size: 0.8rem; /* Smaller text on smaller screens */
+        }
+
+        .badge {
+            font-size: 0.6rem; /* Smaller badges on smaller screens */
+            padding: 0.25rem 0.5rem;
+        }
+
+        .btn-primary, .btn-success, .btn-secondary {
+            font-size: 0.75rem; /* Smaller buttons on smaller screens */
+            padding: 0.3rem 0.8rem;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const readMoreButtons = document.querySelectorAll(".read-more-btn");
+
+        readMoreButtons.forEach((button) => {
+            const description = button.previousElementSibling;
+            const fullText = description.getAttribute("data-full-text");
+
+            if (fullText.length <= 100) {
+                button.style.display = "none";
+            } else {
+                description.textContent = fullText.substring(0, 100) + "...";
+                button.style.display = "inline";
+
+                button.addEventListener("click", function (e) {
+                    const isExpanded = description.classList.contains("expanded");
+
+                    if (isExpanded) {
+                        description.textContent = fullText.substring(0, 100) + "...";
+                        this.textContent = "Read More";
+                    } else {
+                        description.textContent = fullText;
+                        this.textContent = "Read Less";
+                    }
+
+                    description.classList.toggle("expanded");
+                    e.stopPropagation();
+                });
+            }
+        });
+
+        // Live Search
+        document.getElementById('courseSearch').addEventListener('input', function () {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.course-card').forEach(card => {
+                const courseName = card.querySelector('.card-title').textContent.toLowerCase();
+                card.style.display = courseName.includes(query) ? '' : 'none';
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+

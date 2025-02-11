@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Goldsmiths Labs{% endblock %}</title>
+    
+    <!-- Bootstrap CSS (using CDN) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Google Fonts: Poppins & Quicksand (Combined) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    
+    <!-- Inline Styles (Consider moving these to an external stylesheet in production) -->
+    <style>
+        body {
+            font-family: 'Poppins', 'Quicksand', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+        }
+        .navbar .navbar-brand {
+            font-size: 1.5rem;
+            color: #fff !important;
+        }
+        .navbar .nav-link {
+            color: #fff !important;
+            font-size: 0.8rem;
+            transition: background-color 0.5s ease, color 0.3s ease;
+        }
+        .navbar .nav-link:hover,
+        .navbar .nav-item.active .nav-link {
+            background-color: #e3f2fd !important; /* Change background color on hover or active */
+            color: #6a11cb !important; /* Change text color on hover or active */
+            border-radius: 5px; /* Optional: adds a little rounded corner to the background */
+        }
+        
+        .navbar .nav-item.active .nav-link {
+            background-color: #6a11cb !important; /* Active menu item background */
+            color: white !important; /* Active text color */
+        }
+        footer {
+            background-color: #0e0e0e;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 0.85rem;
+        }
+        footer a {
+            color: #ffc107;
+            text-decoration: none;
+            transition: color 0.5s, transform 0.5s;
+        }
+        footer a:hover {
+            transform: translateY(-2px);
+            color: #e89eb8;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        /* Toast Custom Styling */
+        .toast-custom {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+            border: 1px solid #c3e6cb !important;
+            font-size: 0.7rem; /* Reduced font size */
+        }
+
+        /* Container for toast messages */
+        #toast-container {
+            z-index: 1050;
+        }
+
+        /* Toast Style */
+        .toast-body {
+            font-size: 0.75rem; /* Reduced font size */
+        }
+
+        /* Optional: Customize toast's close button */
+        .toast .btn-close {
+            font-size: 0.7rem; /* Smaller close button */
+        }
+        .notification-row.fw-bold {
+            font-weight: bold;
+        }
+        .notification-row {
+            cursor: pointer;
+        }
+        .profile-pic-navbar {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        .profile-pic-navbar:hover {
+            transform: scale(1.6);
+            border-color: #6a11cb;
+        }
+        .shine-effect {
+            position: relative;
+            display: inline-block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+        .shine-effect::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,215,0,0.9), rgba(255,215,0,0.2));
+            transform: translateY(-50%);
+            transition: left 0.6s;
+        }
+        .shine-effect:hover::before {
+            left: 100%;
+        }
+        .shine-effect:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 8px rgba(255,215,0,0.8);
+        }
+    </style>
+    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand shine-effect d-flex align-items-center" href="/">
+                <span style="font-family: 'Quicksand', sans-serif; color: white;">Goldsmiths Labs</span>
+                <img src="{% static 'images/D.png' %}" alt="Goldsmiths Labs" style="height: 40px; margin-right: 8px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        {% if user.is_teacher %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'teacher_courses' %}">Manage Courses</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'teacher_announcements' %}">Announcements</a></li>
+                        {% elif user.is_student %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'student_homepage' %}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'chat_home' %}">
+                                <i class="bi bi-chat-text-fill"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'notifications' %}">Notifications</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="{% url 'profile' %}">
+                                Welcome, {{ user.username }}
+                                <img src="{% if user.profile_picture and user.profile_picture.url %}{{ user.profile_picture.url }}{% else %}{{ user.get_default_profile_picture }}{% endif %}" 
+                                     alt="{{ user.username }}" 
+                                     class="rounded-circle shadow-sm ms-2 profile-pic-navbar" 
+                                     style="width: 20px; height: 20px; object-fit: cover; vertical-align: middle;">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="font-size:0.8rem"></div>
+
+    <!-- Main Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; {{ now|date:"Y" }} Goldsmiths Labs. All Rights Reserved. 
+           <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </p>
+    </footer>
+
+    <!-- To be moved to external file in production) -->
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show toast notifications only once when the page loads
+        {% if unread_notifications %}
+            {% for notification in unread_notifications %}
+                showToast("{{ notification.message }}", {{ notification.id }});
+            {% endfor %}
+        {% endif %}
+        
+        // Mark-as-read functionality for notifications
+        document.querySelectorAll('.mark-as-read').forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationId = this.dataset.id;
+                const notificationRow = this.closest('.notification-row');
+                fetch(`/notifications/mark-as-read/${notificationId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        notificationRow.classList.remove('fw-bold');
+                        this.remove(); // Remove "Mark as Read" button
+                    } else {
+                        console.error('Failed to mark notification as read.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+
+    // Toast Notification function
+    function showToast(message, notificationId) {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-custom align-items-center border-0 fade show';
+        toast.role = 'alert';
+        toast.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">${message}</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>`;
+        toastContainer.appendChild(toast);
+        const bootstrapToast = new bootstrap.Toast(toast);
+        bootstrapToast.show();
+
+        // Mark notification as read after the toast appears
+        setTimeout(function() {
+            fetch(`/notifications/mark-as-read/${notificationId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Notification marked as read');
+                }
+            })
+            .catch(error => console.error('Error marking notification as read:', error));
+        }, 1000);  // delay marking as read slightly after the toast appears
+    }
+
+    // Auto-remove alerts after 2 seconds
+    setTimeout(() => {
+        document.querySelectorAll(".alert").forEach(alert => alert.remove());
+    }, 2000);
+</script>
+
+</body>
+</html>
+
+

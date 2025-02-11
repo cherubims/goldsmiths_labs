@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave Feedback{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Feedback Card -->
+            <div class="card shadow-sm border-0 rounded-lg overflow-hidden">
+                <div class="card-body p-4">
+                    <!-- Title -->
+                    <h2 class="text-primary mb-4 text-center">Leave Feedback for {{ course.name }}</h2>
+
+                    <!-- Feedback Form -->
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Feedback Textarea -->
+                        <div class="mb-4" >
+                            {{ form.comment }}
+                        </div>
+
+                        <!-- Submit & Cancel Buttons -->
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4 position-relative overflow-hidden"
+                                style="background: linear-gradient(45deg, #6a11cb, #2575fc); border: none; font-size:0.9rem">
+                                <span class="position-relative z-index-1">
+                                    <i class="bi bi-send-fill "></i> Submit Feedback
+                                </span>
+                                <span class="btn-hover-effect"></span>
+                            </button>
+                            <a href="{% url 'course_detail' course.id %}" class="btn btn-secondary btn-lg rounded-pill px-4 position-relative overflow-hidden">
+                                <span class="position-relative z-index-1" style="font-size:0.9rem">Cancel</span>
+                                <span class="btn-hover-effect"></span>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Style Enhancements -->
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Form Inputs */
+    textarea {
+        width: 100%;
+        height: 200px;
+        padding: 12px;
+        font-size: 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        resize: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    textarea:focus {
+        border-color: #6a11cb;
+        outline: none;
+        box-shadow: 0 0 5px rgba(106, 17, 203, 0.3);
+    }
+
+    /* Button Styling */
+    .btn {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #6a11cb, #2575fc);
+        border: none;
+    }
+
+    .btn-secondary {
+        background: #f8f9fa;
+        border: 1px solid #ccc;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #6a11cb;
+    }
+
+    .btn-hover-effect {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.5s ease;
+        pointer-events: none;
+    }
+
+    .btn:hover .btn-hover-effect {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}
+
+
+

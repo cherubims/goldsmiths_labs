@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+<section class="p-4 p-md-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card border-0 shadow-sm">
+                    <div class="row g-0">
+                        <!-- Left Section with Image -->
+                        <div class="col-md-6 d-none d-md-block position-relative">
+                            <!-- Blurry Background Image -->
+                            <img class="img-fluid rounded-start w-100 h-100 object-fit-cover position-absolute top-0 left-0" 
+                                src="{% static 'images/reg-6.jpeg' %}" 
+                                alt="Join our platform" 
+                                loading="lazy" 
+                                style="filter: blur(3px); z-index: 1;">
+                            
+                            <!-- Overlay Text -->
+                            <div class="position-absolute top-50 start-50 translate-middle text-center" 
+                                style="z-index: 3; color: white; font-family: 'Quicksand', sans-serif; font-weight: 600; font-size: 12rem; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">
+                                GSL
+                            </div>
+                            
+                            <!-- Tagline Beneath "GSL" -->
+                            <div class="position-absolute top-50 start-50 translate-middle-y text-center" 
+                                style="z-index: 4; color: white; font-family: 'Quicksand', sans-serif; font-weight: 400; font-size: 1.25rem; opacity: 0.9; margin-top: 8rem;">
+                                Research. ReImagine.
+                            </div>
+                        </div>
+
+
+
+                        <!-- Right Section with Form -->
+                        <div class="col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-10">
+                                <div class="card-body p-4 p-md-5">
+                                    <!-- Header Section -->
+                                    <div class="text-center mb-4">
+                                        <h2 class="h4" style="color:#444">Create Your Account</h2>
+                                        <p class="text-muted" style="font-size: 0.9rem;">Join us and start learning today!</p>
+                                    </div>
+                                    
+                                    <!-- Registration Form -->
+                                    <form method="post" novalidate id="register-form">
+                                        {% csrf_token %}
+
+                                        <!-- Username -->
+                                        <div class="form-floating mb-3">
+                                            {{ form.username|add_class:"form-control" }}
+                                            <label for="{{ form.username.id_for_label }}" class="text-muted">Username</label>
+                                        </div>
+
+                                        <!-- Email -->
+                                        <div class="form-floating mb-3">
+                                            {{ form.email|add_class:"form-control" }}
+                                            <label for="{{ form.email.id_for_label }}" class="text-muted">Email Address</label>
+                                        </div>
+
+                                        <!-- Password -->
+                                        <div class="form-floating mb-3">
+                                            {{ form.password1|add_class:"form-control" }}
+                                            <label for="{{ form.password1.id_for_label }}" class="text-muted">Password</label>
+                                        </div>
+
+                                        <!-- Confirm Password -->
+                                        <div class="form-floating mb-3">
+                                            {{ form.password2|add_class:"form-control" }}
+                                            <label for="{{ form.password2.id_for_label }}" class="text-muted">Confirm Password</label>
+                                        </div>
+
+                                        <!-- Role Selection -->
+                                        <div class="mb-4">
+                                            <label class="form-label text-muted" style="font-size: 0.8rem;">Register as:</label>
+                                            <div class="d-flex gap-3">
+                                                <div class="form-check">
+                                                    {{ form.is_teacher|add_class:"form-check-input" }}
+                                                    <label class="form-check-label text-muted" style="font-size: 0.8rem;" for="id_is_teacher">Teacher</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    {{ form.is_student|add_class:"form-check-input" }}
+                                                    <label class="form-check-label text-muted" style="font-size: 0.8rem;" for="id_is_student">Student</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill" id="register-btn">Register</button>
+                                    </form>
+
+                                    <!-- Already have an account? -->
+                                    <div class="text-center mt-3">
+                                        <p class="text-muted" style="font-size: 0.85rem;">
+                                            Already have an account? 
+                                            <a href="{% url 'login' %}" class="text-decoration-none text-primary fw-bold">Login here</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- End Right Section -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fade-Out Animation Styles -->
+<style>
+    /* Form Fade Out Effect */
+    .fade-out {
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+    }
+
+    /* Registration Page Enhancements */
+    .form-floating label {
+        font-size: 0.8rem;
+    }
+
+    /* Radio Buttons Styling */
+    .form-check-input {
+        border: 2px solid #ccc;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .form-check-input:checked {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .form-control {
+        font-size: 0.8rem; /* Adjust as needed */
+        padding: 0.5rem 0.75rem; /* Optional: Reduce padding slightly */
+    }
+    
+    /* Make placeholder text slightly lighter */
+    .form-control::placeholder {
+        color: #3f3f3f  /* Light gray for a subtle look */
+        font-size: 0.8rem; /* Smaller placeholder text */
+    }
+    /* Button styling */
+    .btn-primary {
+        font-size: 0.9rem; /* Smaller button font size */
+        padding: 0.75rem; /* Adjust padding */
+    }
+</style>
+
+<!-- JavaScript for Form Fade-Out Effect -->
+<script>
+    document.getElementById('register-btn').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent immediate form submission
+        const form = document.getElementById('register-form');
+        form.classList.add('fade-out');
+        setTimeout(() => {
+            form.submit(); // Submit the form after animation
+        }, 500); // Match the duration of the animation
+    });
+</script>
+
+{% endblock %}
+

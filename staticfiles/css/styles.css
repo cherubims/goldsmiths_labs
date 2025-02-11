@@ -1,0 +1,50 @@
+/* Font styles */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap');
+
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.navbar-brand img {
+    max-height: 50px;
+}
+
+.nav-link {
+    font-weight: bold;
+    color: #555;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+
+.search-bar {
+    font-family: 'Poppins', sans-serif; /* Modern, clean font */
+    font-size: 1rem; /* Slightly smaller text size */
+    color: #495057; /* Dark gray for text */
+    background-color: #fff; /* Keep it clean */
+    border: 1px solid #ddd; /* Subtle border */
+    padding: 0.8rem 1.2rem; /* Comfortable padding for a sleek look */
+    transition: all 0.3s ease; /* Smooth focus effect */
+}
+
+.search-bar:focus {
+    outline: none; /* Remove blue outline */
+    border-color: #6a11cb; /* Accent color for focus */
+    box-shadow: 0 0 8px rgba(106, 17, 203, 0.2); /* Soft glow for focus */
+}
+
+.search-bar::placeholder {
+    font-size: 0.9rem; /* Slightly smaller font */
+    color: #868e96; /* Softer gray for subtle appearance */
+    opacity: 1; /* Ensure full visibility of the placeholder */
+}

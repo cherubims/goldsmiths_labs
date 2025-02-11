@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="fw-bold text-primary mb-4">Your Notifications</h2>
+
+    <!-- Scrollable container for notifications -->
+    <div class="notification-container" style="max-height: 600px; overflow-y: auto;">
+
+        <ul class="list-group">
+            {% for notification in notifications %}
+            <li class="list-group-item notification-row {% if not notification.is_read %}unread{% endif %}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="notification-content">
+                        <span class="notification-message">{{ notification.message }}</span>
+                        <!-- Display date -->
+                        <small class="text-muted d-block" style="font-size:0.7rem">
+                            Posted on: {{ notification.created_at|date:"F j, Y, g:i a" }}
+                        </small>
+                    </div>
+
+                    {% if not notification.is_read %}
+                    <button class="btn btn-sm btn-outline-primary mark-as-read rounded-pill"
+                        data-id="{{ notification.id }}">
+                        <i class="bi bi-check2-circle"></i> Mark as Read
+                    </button>
+                    {% endif %}
+                </div>
+            </li>
+            {% empty %}
+            <li class="list-group-item text-center text-muted">No notifications available.</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+
+
+<style>
+    /* Notification Row Styling */
+    .notification-row {
+        padding: 15px;
+        border-radius: 8px;
+        transition: background 0.3s ease, transform 0.2s ease-in-out, color 0.3s ease-in-out, font-weight 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Unread Notifications */
+    .notification-row.unread {
+        background-color: #f3f7ff;
+        font-weight: 600;
+    }
+
+    /* Hover Effect */
+    .notification-row:hover {
+        background-color: #eaf2ff;
+        transform: scale(1.02);
+    }
+
+    /* Apply bold and blue text to child elements on hover */
+    .notification-row:hover .notification-message,
+    .notification-row:hover .text-muted {
+        font-weight: bold; /* Make text bold */
+        color: #007bff; /* Change text color to blue */
+    }
+
+    /* Notification Message */
+    .notification-message {
+        font-size: 0.8rem;
+        color: #3f3f3f;
+    }
+
+    /* Timestamp Styling */
+    .text-muted {
+        font-size: 0.8rem;
+        color: #6c757d;  /* Ensures it's a muted grey */
+        transition: color 0.1s ease-in-out, font-weight 0.1s ease-in-out;
+    }
+
+    /* Mark as Read Button */
+    .mark-as-read {
+        font-size: 0.8rem;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .mark-as-read:hover {
+        background-color: #28a745;
+        color: white;
+        border-color: #28a745;
+    }
+
+    /* Make the notification container scrollable */
+    .notification-container {
+        max-height: 500px; /* Set height */
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.85); /* Glass effect */
+        backdrop-filter: blur(10px); /* Glass-like blur */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* Soft shadow */
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 80%);
+        scroll-behavior: smooth; /* Smooth scrolling */
+        border-radius: 10px; /* Rounded corners */
+    }
+
+    /* Customizing the scrollbar */
+    .notification-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* Handle */
+    .notification-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #00aaff, #0077ff); /* Gradient color */
+        border-radius: 8px;
+        border: 2px solid #ffffff; /* padding*/
+    }
+
+    /* Hover effect for the scrollbar */
+    .notification-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #ff00ff,rgb(114, 18, 231)); /* Another gradient for hover */
+    }
+
+    /* Track */
+    .notification-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.5); /* Semi-transparent track */
+        border-radius: 8px;
+    }
+</style>
+
+
+<!-- Handle "Mark as Read" -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const markAsReadButtons = document.querySelectorAll(".mark-as-read");
+
+        markAsReadButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const notificationId = this.dataset.id;
+                const notificationRow = this.closest(".notification-row");
+
+                fetch(`/notifications/mark-as-read/${notificationId}/`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}",
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        notificationRow.classList.remove("unread"); // Remove unread styling
+                        this.remove(); // Remove "Mark as Read" button
+                    } else {
+                        console.error("Failed to mark notification as read.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+

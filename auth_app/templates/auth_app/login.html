@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+<!-- Add fade-in animation styles -->
+<style>
+    #page-content {
+        transition: opacity 1s ease-in;
+    }
+    body.loaded #page-content {
+        opacity: 1;
+    }
+
+    /* Styling for the input text */
+    .form-control {
+        font-size: 0.8rem; /* Smaller font size */
+        color: #6c757d; /* Dark gray color */
+        border: 1px solid #ddd; /* Light gray border */
+        padding: 0.75rem 1rem; /* Comfortable padding */
+    }
+
+    /* Placeholder text styling */
+    .form-control::placeholder {
+        color: #adb5bd; /* Light gray placeholder */
+        opacity: 1; /* Ensure full visibility */
+        font-size: 0.8rem;
+    }
+
+    /* Input focus state */
+    .form-control:focus {
+        border-color: #6a11cb; /* Matching theme color */
+        box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25); /* Subtle shadow */
+    }
+
+    /* Adjust label font size */
+    .form-floating > label {
+        font-size: 0.85rem; /* Smaller label size */
+        color: #6c757d; /* Match input text */
+    }
+
+    /* Button styling */
+    .btn-primary {
+        font-size: 0.9rem; /* Smaller button font size */
+        padding: 0.75rem; /* Adjust padding */
+    }
+</style>
+
+<!-- Form Section -->
+<div class="container p-3 p-md-4 p-xl-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xxl-11">
+            <div class="card border-light shadow-sm">
+                <div class="row g-0">
+                    <!-- Left Section with Image -->
+                    <div class="col-12 col-md-6">
+                        <img class="img-fluid rounded-start w-100 h-100 object-fit-cover" 
+                             src="{% static 'images/login.jpg' %}" 
+                             alt="Welcome back!" 
+                             loading="lazy">
+                    </div>
+
+                    <!-- Right Section with Form -->
+                    <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
+                        <div class="col-12 col-lg-11 col-xl-10">
+                            <div class="card-body p-3 p-md-4 p-xl-5">
+                                <!-- Header Section -->
+                                <div class="text-center mb-4">
+                                    <h2 class="h4 mt-3" style="color:#444">Welcome Back!</h2>
+                                    <p class="text-muted" style="font-size: 0.9rem;">Please log in to continue</p>
+                                </div>
+                                
+                                <!-- Login Form -->
+                                <form method="post" novalidate>
+                                    {% csrf_token %}
+                                    <!-- Username -->
+                                    <div class="form-floating mb-3">
+                                        {{ form.username|add_class:"form-control" }}
+                                        {{ form.username.label_tag }}
+                                    </div>
+
+                                    <!-- Password -->
+                                    <div class="form-floating mb-3">
+                                        {{ form.password|add_class:"form-control" }}
+                                        {{ form.password.label_tag }}
+                                    </div>
+                                    
+                                    <!-- Submit Button -->
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">Log In</button>
+                                </form>
+                                
+                                <!-- Footer Section -->
+                                <div class="text-center mt-4 text-muted" style="font-size: 0.85rem">
+                                    <p>Don't have an account? 
+                                        <a href="{% url 'register' %}"
+                                        class="text-decoration-none text-primary fw-bold">Register here</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End Right Section -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Fade-in effect for the entire page
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.classList.add('loaded');
+    });
+</script>
+{% endblock %}

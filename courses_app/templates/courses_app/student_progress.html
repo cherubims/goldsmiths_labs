@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Course Progress{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ course.name }} - Progress</h2>
+    <p>{{ course.description }}</p>
+    <h4>Your Progress: {{ progress.progress_percentage|default:0 }}%</h4>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress.progress_percentage|default:0 }}%;" aria-valuenow="{{ progress.progress_percentage|default:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+{% endblock %}

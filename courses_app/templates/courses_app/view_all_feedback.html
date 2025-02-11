@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}All Student Feedback{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 style="font-family: 'Poppins', sans-serif; color:#444">Student Feedback</h2>
+                <p class="text-muted" style="font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">
+                    Insights from students enrolled in your courses.
+                </p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="mb-4 d-flex justify-content-center">
+                <div class="input-group" style="max-width: 500px;">
+                    <input type="text" id="feedbackSearch" class="form-control shadow-sm rounded-pill" 
+                           placeholder="Search feedback..." 
+                           style="border: 1px solid #ccc; padding: 0.75rem 1rem; font-size: 0.85rem; color: #6c757d;">
+                </div>
+            </div>
+
+            <!-- Feedback Table -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header text-white text-center" 
+                     style="background: linear-gradient(45deg, #6a11cb, #2575fc); font-family: 'Poppins';">
+                    <h5 class="mb-0">All Courses</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th class="text-primary">Student</th>
+                                    <th class="text-info">Course</th>
+                                    <th class="text-success">Feedback</th>
+                                    <th class="text-warning text-nowrap">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackTable">
+                                {% for feedback in feedback_list %}
+                                <tr class="feedback-row" style="font-size: 0.8rem;">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="{% if feedback.student.profile_picture and feedback.student.profile_picture.url %}
+                                                {{ feedback.student.profile_picture.url }}
+                                                {% else %}
+                                                {{ feedback.student.get_default_profile_picture }}
+                                                {% endif %}" 
+                                                alt="{{ feedback.student.username }}" 
+                                                class="rounded-circle me-2 shadow-sm" 
+                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                            <span class="feedback-student" >{{ feedback.student.username }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="feedback-course">{{ feedback.course.name }}</td>
+                                    <td class="feedback-comment">{{ feedback.comment }}</td>
+                                    <td class="feedback-date text-nowrap">{{ feedback.created_at|date:"M d, Y H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted" style="font-family: 'Quicksand', sans-serif; font-size: 0.9rem;">
+                                        No feedback available at the moment.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <p class="mb-0 text-muted" style="font-size: 0.85rem;">
+                        Last Updated: {{ now|date:"M d, Y H:i" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* Table hover effect */
+    .table-hover tbody tr:hover {
+        background-color: #e6d7ff !important;
+        transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;;
+        cursor: pointer;
+    }
+
+    /* Ensure date column does not wrap */
+    .text-nowrap {
+        white-space: nowrap;
+    }
+
+    /* Search input field */
+    #feedbackSearch {
+        font-size: 0.85rem;
+        border: 1px solid #ccc;
+        border-radius: 4px; /* Rounded corners */
+        padding: 0.6rem 1rem;
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    /* Search input field focus effect */
+    #feedbackSearch:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none; 
+    }
+
+    /* Table styling */
+    .table-hover {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+
+    .table-hover th,
+    .table-hover td {
+        padding: 12px 15px; 
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table-hover th {
+        background-color: #f8f9fa;
+        font-weight: 600; 
+        text-align: left; 
+    }
+
+    .table-hover tbody tr {
+        transition: background-color 0.3s ease-in-out;
+        transform: scale(1.02);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .table-hover tbody tr:nth-child(even) {
+        background-color: #e6d7ff; 
+    }
+
+    .table-hover tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+</style>
+
+<!-- Live Search -->
+<script>
+    document.getElementById('feedbackSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const feedbackRows = document.querySelectorAll('.feedback-row');
+
+        feedbackRows.forEach(row => {
+            const student = row.querySelector('.feedback-student').textContent.toLowerCase();
+            const course = row.querySelector('.feedback-course').textContent.toLowerCase();
+            const comment = row.querySelector('.feedback-comment').textContent.toLowerCase();
+            const date = row.querySelector('.feedback-date').textContent.toLowerCase();
+
+            if (student.includes(query) || course.includes(query) || comment.includes(query) || date.includes(query)) {
+                row.style.display = ''; // Show matching rows
+            } else {
+                row.style.display = 'none'; // Hide non-matching rows
+            }
+        });
+    });
+</script>
+{% endblock %}

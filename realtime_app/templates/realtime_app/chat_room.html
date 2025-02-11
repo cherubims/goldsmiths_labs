@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% block title %}Chat with {{ other_user.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Chat Title-->
+    <h2 class="mb-4 text-center" style="font-family: 'Poppins', sans-serif; font-size: 1.5rem; font-weight: 300;">
+        Chat with 
+        <span style="color:rgb(128, 0, 255); font-weight: 700;">{{ other_user.username }}</span>
+    </h2>
+
+    <!-- Chat Container-->
+    <div id="chat-messages" class="chat-container">
+        {% for message in messages %}
+        <div class="chat-bubble {% if message.sender == request.user %}me-chat{% else %}other-chat{% endif %}">
+            <div class="d-flex align-items-center">
+                <!-- Profile Picture -->
+                {% if message.sender == request.user %}
+                <span class="chat-text">{{ message.content }}</span>
+                <img src="{% if request.user.profile_picture %}{{ request.user.profile_picture.url }}{% else %}/media/profile_pics/student-default.png{% endif %}" 
+                     alt="{{ request.user.username }}" 
+                     class="chat-profile-pic ms-2">
+                {% else %}
+                <img src="{% if other_user.profile_picture %}{{ other_user.profile_picture.url }}{% else %}/media/profile_pics/student-default.png{% endif %}" 
+                     alt="{{ other_user.username }}" 
+                     class="chat-profile-pic me-2">                     
+                <span class="chat-text">{{ message.content }}</span>
+                {% endif %}
+            </div>
+            <span class="timestamp">
+                {{ message.timestamp|date:"H:i" }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Chat Form -->
+    <form id="chat-form" class="d-flex mt-3">
+        <input id="message-input"
+        type="text"
+        class="form-control me-2 rounded-pill"
+        style="font-size: 0.75rem;"
+        placeholder="Type your message..."
+        required>
+        <button type="submit"
+        class="btn btn-primary rounded-pill"
+        style="font-size: 0.8rem;">Send</button>
+    </form>
+</div>
+
+<!-- Styling for Chat Room -->
+<style>
+    .chat-box {
+        max-width: 60%;  /* Increased width */
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Chat Container */
+    .chat-container {
+        height: 400px;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    /* Chat Bubbles */
+    .chat-bubble {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 75%;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        word-wrap: break-word;
+        position: relative;
+    }
+
+    .me-chat {
+        align-self: flex-end;
+        background-color: #007bff;
+        color: white;
+        font-size: 0.8rem;
+    }
+
+    .other-chat {
+        align-self: flex-start;
+        background-color: #f1f1f1;
+        color: #333;
+        font-size: 0.8rem;
+    }
+
+    /* Profile Picture Styling */
+    .chat-profile-pic {
+        width: 35px;
+        height: 35px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* Timestamp */
+    .timestamp {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 5px;
+    }
+
+    .other-chat .timestamp {
+        color: #666;
+    }
+</style>
+
+<!-- Add the WebSocket JavaScript code here -->
+<script>
+    // Set the room name dynamically from Django
+    const roomName = "{{ other_user.username }}";
+    const wsUrl = 'ws://' + window.location.host + '/ws/chat/' + roomName + '/';
+    console.log("WebSocket URL:", wsUrl); // Debug WebSocket URL
+    
+    const chatSocket = new WebSocket(wsUrl);    
+    
+    // WebSocket connection opened
+    chatSocket.onopen = function(e) {
+        console.log("WebSocket connection established!");
+    };
+
+    // WebSocket connection closed
+    chatSocket.onclose = function(e) {
+        console.warn("WebSocket connection closed:", e);
+    };
+
+    // WebSocket error
+    chatSocket.onerror = function(e) {
+        console.error("WebSocket error:", e);
+    };
+
+    // WebSocket message received
+    chatSocket.onmessage = function(e) {
+        console.log("Message received:", e.data);
+        const data = JSON.parse(e.data);
+
+        // Debug: Check if data contains the message
+        console.log("Parsed data:", data)
+
+        // Append the new message to the chat container
+        const chatMessages = document.querySelector('#chat-messages');
+        const newMessage = document.createElement('div');
+        newMessage.classList.add('chat-bubble');
+        if (data.sender === "{{ request.user.username }}") {
+            newMessage.classList.add('me-chat');
+        } else {
+            newMessage.classList.add('other-chat');
+        }
+
+        newMessage.innerHTML = `
+            <div class="d-flex align-items-center">
+                <span class="chat-text">${data.message}</span>
+                <img src="${data.sender === '{{ request.user.username }}' ? '{{ request.user.profile_picture.url }}' : '{{ other_user.profile_picture.url }}'}" 
+                     alt="${data.sender}" 
+                     class="chat-profile-pic ms-2">
+            </div>
+            <span class="timestamp">${data.timestamp}</span>
+        `;
+        chatMessages.appendChild(newMessage);
+
+        // Scroll to the bottom of the chat container
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // Update container dynamically
+        chatMessages.style.visibility = "visible";
+    };
+
+    // Handle message sending when user submits the form
+    document.querySelector('#chat-form').onsubmit = function(e) {
+        e.preventDefault();
+
+        const messageInputDom = document.querySelector('#message-input');
+        const message = messageInputDom.value;
+        const sender = "{{ request.user.username }}";  // Current user's username
+
+        // Debug: Check if message and sender are correct
+        console.log("Sending message:", message, "Sender:", sender);
+
+        // Send message to WebSocket
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'sender': sender // Sender should be passed properly
+        }));
+
+        // Clear the input field after sending the message
+        messageInputDom.value = '';
+    };
+
+</script>
+
+{% endblock %}
+

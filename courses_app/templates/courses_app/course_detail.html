@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block title %}{{ course.name }} - Materials{% endblock %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="text-center fw-bold text-secondary mb-4" style="font-size: 1.4rem;">Materials for {{ course.name }}</h2>
+
+    <!-- Materials List -->
+    <ul class="list-group shadow-sm">
+        {% for material in materials %}
+        <li class="list-group-item d-flex justify-content-between align-items-center material-item">
+            <div class="flex-grow-1">
+                <!-- Material Title (File Link) -->
+                {% if material.file %}
+                <a href="{{ material.file.url }}" target="_blank" class="text-decoration-none text-primary">
+                    <i class="bi bi-file-earmark-text"></i> {{ material.title }}
+                </a>
+                {% endif %}
+
+                <!-- Embedded Video -->
+                {% if material.video_url %}
+                <div class="mt-3">
+                    <iframe width="100%" height="180" src="{{ material.video_url }}" class="rounded shadow-sm" frameborder="0" allowfullscreen></iframe>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Completion Button -->
+            <div>
+                <form method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="material_id" value="{{ material.id }}">
+                    {% if material.id in completed_material_ids %}
+                        <button type="submit" class="btn btn-success btn-sm rounded-pill completed-btn" disabled>
+                            <i class="bi bi-check-circle"></i> Completed
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill complete-btn">
+                            Mark as Complete
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </li>
+        {% empty %}
+        <p class="text-center text-muted mt-3">No materials available for this course.</p>
+        {% endfor %}
+    </ul>
+    
+    <!-- 🔹 Progress Bar -->
+    <div class="mt-5">
+        <h4 class="text-center fw-bold text-secondary">Course Progress</h4>
+        {% if total_materials > 0 %}
+        <div class="progress mt-3" style="height: 18px; border-radius: 6px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+            <div 
+                class="progress-bar progress-bar-striped bg-success progress-bar-animated" 
+                role="progressbar" 
+                style="width: {{ completed_materials|div:total_materials|mul:100|floatformat:2 }}%;" 
+                aria-valuenow="{{ completed_materials|div:total_materials|mul:100|floatformat:2 }}" 
+                aria-valuemin="0" 
+                aria-valuemax="100">
+                <span style="font-size: 0.75rem;">{{ completed_materials }} / {{ total_materials }} Completed</span>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-muted text-center mt-3">No materials available yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Material List Hover Effect */
+    .material-item {
+        transition: all 0.3s ease-in-out;
+        border-radius: 8px;
+        padding: 15px;
+        font-size: 0.9rem;
+        background-color: #fff;
+    }
+
+    .material-item:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Progress Bar */
+    .progress {
+        height: 10px;
+        border-radius: 6px;
+    }
+
+    /* Completion Button Styles */
+    .complete-btn {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .complete-btn:hover {
+        background-color: #6a11cb;
+        color: #fff;
+        transform: scale(1.05);
+    }
+
+    /* Disabled Completed Button */
+    .completed-btn {
+        background-color: #28a745 !important;
+        color: white !important;
+        cursor: not-allowed;
+        font-weight: bold;
+    }
+
+    /* File & Video Text Adjustments */
+    .fw-semibold {
+        font-weight: 600;
+    }
+
+    /* Text Adjustments */
+    .text-secondary {
+        color: #5a5a5a !important;
+    }
+
+    .text-primary {
+        color: #2575fc !important;
+    }
+</style>
+
+{% endblock %}

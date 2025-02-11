@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Chat Home{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Search Bar -->
+    <div class="mb-4 d-flex justify-content-center">
+        <form method="get" action="{% url 'chat_home' %}" class="input-group" style="max-width: 600px;">
+            <input 
+                type="text" 
+                name="search" 
+                id="searchUsers"
+                class="form-control form-control-lg rounded-pill shadow-sm" 
+                placeholder="Search users..." 
+                value="{{ search_query|default:'' }}"
+                style="font-size: 0.85rem; color: #6c757d;"
+            >
+            <button type="submit"
+            class="btn btn-primary rounded-pill ms-2"
+            style="font-size: 0.85rem;">Search</button>
+        </form>
+    </div>
+
+    <!-- Teachers Section -->
+    <h5 class="mb-3 text-primary">Teachers</h5>
+    <ul id="teachersList" class="list-group mb-4">
+        {% for teacher in teachers %}
+        <li class="list-group-item d-flex align-items-center user-row"
+            data-username="{{ teacher.username }}" 
+            data-role="teacher"
+            onclick="window.location.href='{% url 'chat_room' teacher.username %}'">
+            
+            <!-- Profile Picture -->
+            <img src="{% if teacher.profile_picture %}{{ teacher.profile_picture.url }}{% else %}/media/profile_pics/teacher-default.png{% endif %}" 
+                 alt="{{ teacher.username }}" 
+                 class="rounded-circle me-3 profile-pic">
+
+            <span style="font-size:0.85rem; flex-grow:1;">{{ teacher.username }}</span>
+            <span class="badge bg-primary">Teacher</span>
+        </li>
+        {% empty %}
+        <p class="text-muted">No teachers found.</p>
+        {% endfor %}
+    </ul>
+
+    <!-- Students Section -->
+    <h5 class="mb-3 text-success">Students</h5>
+    <ul id="studentsList" class="list-group">
+        {% for student in students %}
+        <li class="list-group-item d-flex align-items-center user-row"
+            data-username="{{ student.username }}" 
+            data-role="student"
+            onclick="window.location.href='{% url 'chat_room' student.username %}'">
+            
+            <!-- Profile Picture -->
+            <img src="{% if student.profile_picture %}{{ student.profile_picture.url }}{% else %}/media/profile_pics/student-default.png{% endif %}" 
+                 alt="{{ student.username }}" 
+                 class="rounded-circle me-3 profile-pic">
+
+            <span style="font-size:0.85rem; flex-grow:1;">{{ student.username }}</span>
+            <span class="badge bg-success">Student</span>
+        </li>
+        {% empty %}
+        <p class="text-muted">No students found.</p>
+        {% endfor %}
+    </ul>
+
+    
+</div>
+
+<!-- Styles for Profile Pics & Hover Effects -->
+<style>
+    /* Profile Picture Styling */
+    .profile-pic {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 2px solid #ddd;
+    }
+
+    /* Smooth Hover Effect */
+    .user-row {
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+
+    .user-row:hover {
+        background-color: #e8f5ff; /* Light blue hover effect */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<!-- JavaScript for Live Search -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchUsers");
+        const userRows = document.querySelectorAll(".user-row"); // Get all user rows
+
+        searchInput.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+
+            userRows.forEach(row => {
+                const username = row.getAttribute("data-username").toLowerCase();
+                row.style.display = username.includes(query) ? "flex" : "none";
+            });
+        });
+    });
+</script>
+
+{% endblock %}
+

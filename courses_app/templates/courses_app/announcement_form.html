@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Create Announcement{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 650px;">
+    <!-- Page Title -->
+    <h2 class="fw-bold text-primary text-center mb-4">Create a New Announcement</h2>
+
+    <!-- Form Card -->
+    <div class="card shadow-sm border-0 rounded-lg p-4">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <!-- Title Input -->
+            <div class="form-floating mb-3">
+                <input id="id_title" name="title" type="text" class="form-control form-control-sm" required>
+                <label for="id_title">Title</label>
+            </div>
+
+            <!-- Message Input (Extended Height) -->
+            <div class="form-floating mb-3">
+                <textarea id="id_message" name="message" class="form-control form-control-sm message-area" required></textarea>
+                <label for="id_message">Message</label>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+                <a href="{% url 'dashboard' %}" 
+                   class="btn btn-outline-secondary rounded-pill px-4 transition-effect">Cancel</a>
+                
+                <button type="submit" 
+                        class="btn btn-success rounded-pill px-4 transition-effect">Create Announcement</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    /* General Styling */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Form Fields */
+    .form-control {
+        font-size: 0.85rem;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    /* Labels */
+    .form-label {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+    /* Make Message Field Larger by Default */
+    .message-area {
+        min-height: 250px; /* Extended height */
+        resize: vertical; /* Allow user resizing */
+    }
+
+    /* Buttons */
+    .btn {
+        font-weight: 500;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .btn-outline-secondary:hover {
+        background-color: rgb(9, 124, 240);
+    }
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 1.5rem;
+        }
+        .card {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+{% endblock %}
+

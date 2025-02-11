@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Course Materials{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ course.name }} - Materials</h2>
+    <p>{{ course.description }}</p>
+    <ul class="list-group">
+        {% for material in materials %}
+        <li class="list-group-item">
+            <strong>{{ material.title }}</strong>
+            <a href="{{ material.file.url }}" class="btn btn-primary btn-sm float-end" download>Download</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No materials available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

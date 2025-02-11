@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}View Feedback{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow-sm border-0 rounded-lg">
+        <div class="card-body p-4">
+            <h2 class="fw-bold text-primary mb-4">Feedback for {{ course.name }}</h2>
+
+            {% if feedback_list %}
+            <ul class="list-group" id="feedbackList">
+                {% for feedback in feedback_list %}
+                <li class="list-group-item feedback-item d-flex align-items-center">
+                    
+                    <!-- Avatar -->
+                    <div class="avatar me-3 flex-shrink-0">
+                        <img src="{{ feedback.student.get_profile_picture_url }}" 
+                             alt="Profile" 
+                             class="rounded-circle border shadow-sm" 
+                             width="50" height="50">
+                    </div>
+
+                    <!-- Feedback Content -->
+                    <div class="feedback-content flex-grow-1">
+                        <strong class="text-dark d-block feedback-student">{{ feedback.student.username }}</strong>
+                        <p class="text-muted mb-0 feedback-text">{{ feedback.comment }}</p>
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="timestamp text-muted text-end">
+                        <small><i class="bi bi-clock me-1"></i> {{ feedback.created_at|date:"M d, Y H:i" }}</small>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-center text-muted">No feedback has been submitted for this course yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .feedback-item {
+        padding: 15px;
+        border-radius: 8px;
+        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out, border 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        font-size:0.8rem;
+        border: 1px solid transparent;
+    }
+
+    .feedback-item:hover {
+        background: #e8f5ff; 
+        transform: scale(1.02);
+        border: 0.2px solid #007bff;
+    }
+
+    .avatar {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .avatar img {
+        object-fit: cover;
+        border: 2px solid #ddd;
+    }
+
+    .feedback-content {
+        width: 65%;
+    }
+
+    .feedback-text {
+        font-size: 0.8rem;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+ 
+    .timestamp {
+        width: 20%;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    
+    #feedbackSearch {
+        font-size: 0.85rem;
+        border: 1px solid #ccc;
+        padding: 0.6rem 1rem;
+    }
+</style>
+
+{% endblock %}
