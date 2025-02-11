@@ -168,6 +168,9 @@ STATICFILES_DIRS = [
 # Directory where Django collects static files for production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Add WhiteNoise configuration to handle static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
