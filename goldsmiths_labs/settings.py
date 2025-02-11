@@ -161,7 +161,7 @@ STATIC_URL = 'static/'
 
 # Add the static folder to STATICFILES_DIRS
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # Path to the static directory
+    BASE_DIR / 'static', 
 ]
 
 # Directory where Django collects static files for production
