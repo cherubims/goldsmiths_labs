@@ -21,9 +21,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(x_u5573i+m_6+qew8%q1ixj61@x-obc&kx(4q4m60=-k(@k_z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'goldsmiths-labs.onrender.com']
+ALLOWED_HOSTS = ['goldsmiths-labs.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
