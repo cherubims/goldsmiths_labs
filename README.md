@@ -70,13 +70,11 @@ Goldsmiths Labs is a clean and modern, feature-rich e-learning platform designed
 
 -  **Django REST Framework (DRF)** - API Development
 
--  **Django Channels** - Real-time WebSockets
+-  **Django Channels, WEBSOCKETS, Daphne** - Real-time WebSockets
 
 -  **SQLite3** - Database
 
 -  **Bootstrap 5** - Frontend Styling
-
--  **WebSockets & RabbitMQ** - Real-time Communication
 
 ----------
 
@@ -88,8 +86,9 @@ Ensure you have the following installed:
 
 -   Python 3+
 -   Django 4.2+
--   RabbitMQ (for WebSockets & Notifications)
+-   Django Channels, WEBSOCKETS, Redis, and Daphne (Chat/Realtime communication)
 -   SQLite3
+-   DRF-YASG (Swagger UI) + DRF (API)
 
 
 ### i. Clone the Repository
