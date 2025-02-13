@@ -1,72 +1,68 @@
 
-# Goldsmiths Labs - E-Learning Platform
+# 🚀 Goldsmiths Labs - E-Learning Platform
 
-Goldsmiths Labs is a modern, feature-rich e-learning platform designed to facilitate seamless interaction between students and teachers. It provides a structured environment for course management, real-time communication, progress tracking, and notifications, ensuring a smooth and engaging learning experience.
-
-## 🚀 Goal
-
-To offer a streamlined e-learning experience by enabling teachers to create and manage courses efficiently, while allowing students to enroll, track their progress, and communicate in real-time.
+Goldsmiths Labs is a clean and modern, feature-rich e-learning platform designed to facilitate seamless interaction between students and teachers. It provides a structured environment for course management, real-time communication, progress tracking, and notifications, ensuring a smooth and engaging learning experience.
 
 ----------
 
 ## 📌 Features
 
-### 🔹 User Authentication & Roles
+### 1. User Authentication & Roles
 
 -   Custom user authentication with **Students** and **Teachers** roles.
 -   Secure login and registration system.
 -   Profile management with profile picture upload.
 
-### 🔹 Course Management
+### 2. Course Management
 
 -   Teachers can create and manage courses.
 -   Students can enroll in available courses.
 -   Course materials can be uploaded as PDFs, videos, or documents.
 -   Course completion tracking.
 
-### 🔹 Announcements & Feedback
+### 3. Announcements & Feedback
 
 -   Teachers can post announcements for their students.
 -   Students can leave feedback on courses.
 -   Teachers can view feedback left by students.
 
-### 🔹 Notifications System
+### 4. Notifications System
 
 -   Automated notifications for teachers when students enroll.
 -   Notifications for students when new materials are uploaded.
 -   Teachers are notified when students complete courses.
 -   Mark notifications as read functionality.
 
-### 🔹 Real-Time Chat
+### 5. Real-Time Chat
 
 -   In-app chat system for student-teacher communication.
 -   Users can search for specific students/teachers in the chat feature.
 -   Supports real-time messaging with WebSockets.
 
-### 🔹 Student Progress Tracking
+### 6. Student Progress Tracking
 
 -   Students can track their course progress.
 -   Teachers can monitor student completion rates.
 -   Progress bars for visual representation.
 
-### 🔹 **Basic but Decent Inbuilt Search Capabilities**
+### 7. Basic but Decent Inbuilt Search Capabilities
 
 -   Teachers can **search for students** within the feedback section.
 -   The **chat feature** also includes an inbuilt search to find users quickly.
 -   Searchable announcements for teachers and students.
 
-### 🔹 API with Swagger Docs
+### 8. API with Swagger Docs
 
 -   RESTful API endpoints for external integrations.
 -   Fully documented API using Swagger.
 -   Secure authentication with Token-based authentication.
 
-### 🔹 Admin Panel
+### 9. Admin Panel
 
--   Custom **modern and elegant** admin panel for managing users, courses, and materials.
+-   Custom **modern and elegant** admin login panel for managing users, courses, and materials.
 -   Secure authentication for admin users.
 
-##  🛠️ **Technologies Used**
+##  🛠️ **Main Technologies Used**
 
 -  **Django** - Web Framework
 
@@ -74,11 +70,9 @@ To offer a streamlined e-learning experience by enabling teachers to create and 
 
 -  **Django Channels** - Real-time WebSockets
 
--  **PostgreSQL/SQLite** - Database
+-  **SQLite3** - Database
 
 -  **Bootstrap 5** - Frontend Styling
-
--  **jQuery & AJAX** - Dynamic UI Elements
 
 -  **WebSockets & RabbitMQ** - Real-time Communication
 
@@ -138,7 +132,7 @@ python manage.py createsuperuser
 
 ----------
 
-## 📈 Future Improvements
+## 📈 Top 6 Future Improvements (Full list in documented report)
 
 1.  **Advanced Search:** Implement AI-powered search with fuzzy matching.
 2.  **Gamification:** Reward students with badges for course completion.
