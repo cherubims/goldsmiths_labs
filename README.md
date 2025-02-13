@@ -61,6 +61,8 @@ Goldsmiths Labs is a clean and modern, feature-rich e-learning platform designed
 
 -   Custom **modern and elegant** admin login panel for managing users, courses, and materials.
 -   Secure authentication for admin users.
+----------
+
 
 ##  🛠️ **Main Technologies Used**
 
@@ -90,15 +92,15 @@ Ensure you have the following installed:
 -   SQLite3
 
 
-### 🔹 Clone the Repository
+### i. Clone the Repository
 
 ```sh
-git clone https://github.com/yourusername/goldsmiths-labs.git
+git clone https://github.com/cherubims/goldsmiths_labs.git
 cd goldsmiths-labs
 
 ```
 
-### 🔹 Create a Virtual Environment
+### ii. Create a Virtual Environment
 
 ```sh
 python -m venv goldsmithsenv
@@ -108,14 +110,14 @@ goldsmithsenv\Scripts\activate  # Windows
 
 ```
 
-### 🔹 Install Dependencies
+### iii. Install Dependencies
 
 ```sh
 pip install -r requirements.txt
 
 ```
 
-### 🔹 Apply Migrations & Run Server
+### iv. Apply Migrations & Run Server
 
 ```sh
 python manage.py migrate
@@ -123,7 +125,7 @@ python manage.py runserver
 
 ```
 
-### 🔹 Create Superuser (for Admin Access)
+### v. Create Superuser (for Admin Access)
 
 ```sh
 python manage.py createsuperuser
