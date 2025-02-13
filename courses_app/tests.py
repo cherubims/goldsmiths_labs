@@ -1,10 +1,12 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from courses_app.models import Course
+from django.templatetags.static import static
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 User = get_user_model()
 
-class CourseViewTests(TestCase):
+class CourseViewTests(StaticLiveServerTestCase):
 
     def setUp(self):
         self.client = Client()
@@ -17,6 +19,7 @@ class CourseViewTests(TestCase):
         response = self.client.get("/auth/teacher/dashboard/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Django Basics")  # Checks if course is listed
+        self.assertContains(response, static('images/D.png'))
 
     def test_student_cannot_access_teacher_dashboard(self):
         self.client.login(username="student", password="pass123")

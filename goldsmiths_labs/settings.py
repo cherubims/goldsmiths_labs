@@ -62,6 +62,21 @@ CHANNEL_LAYERS = {
 }
 CORS_ALLOW_ALL_ORIGINS = True  # to restrict in production
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
+
+STATIC_URL = 'static/'
+
+# Add the static folder to STATICFILES_DIRS
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', 
+]
+
+# Directory where Django collects static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Add WhiteNoise configuration to handle static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -154,22 +169,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Add the static folder to STATICFILES_DIRS
-STATICFILES_DIRS = [
-    BASE_DIR / 'static', 
-]
-
-# Directory where Django collects static files for production
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Add WhiteNoise configuration to handle static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
 MEDIA_URL = '/media/'
