@@ -18,14 +18,14 @@ def teacher_courses_view(request):
         return redirect('dashboard')
 
     query = request.GET.get('query', '')
-    print(f"Search Query: {query}")  # Debugging: Check the query parameter
+    print(f"Search Query: {query}")  # Debug: Check the query parameter
 
     if query:
         courses = Course.objects.filter(teacher=request.user, name__icontains=query)
     else:
         courses = Course.objects.filter(teacher=request.user)
     
-    print(f"Fetched Courses: {courses}")  # Debugging: Check the fetched courses
+    print(f"Fetched Courses: {courses}")  # Debug: Check the fetched courses
 
     form = CourseSearchForm(initial={'query': query})
     return render(request, 'courses_app/teacher_courses.html', {'courses': courses, 'form': form})
@@ -48,6 +48,7 @@ def create_course_view(request):
         form = CourseForm()
     return render(request, 'courses_app/create_course.html', {'form': form})
 
+
 @login_required
 def course_detail_view(request, course_id):
     course = get_object_or_404(Course, id=course_id)
@@ -65,7 +66,6 @@ def course_detail_view(request, course_id):
     })
 
 
-
 @login_required
 def upload_material_view(request, course_id):
     course = get_object_or_404(Course, id=course_id, teacher=request.user)
@@ -79,7 +79,6 @@ def upload_material_view(request, course_id):
             material.save()
 
             # Create notifications for all enrolled students
-            # Modify this line to use Enrollment to get students for the course
             enrolled_students = Enrollment.objects.filter(course=course)
             for enrollment in enrolled_students:
                 student = enrollment.student
@@ -99,6 +98,7 @@ def upload_material_view(request, course_id):
         'materials': materials,
     })
 
+
 @login_required
 def delete_material_view(request, material_id):
     material = get_object_or_404(Material, id=material_id, course__teacher=request.user)
@@ -106,6 +106,7 @@ def delete_material_view(request, material_id):
     material.delete()
     messages.success(request, "Material deleted successfully!")
     return redirect('upload_material', course_id=course_id)
+
 
 @login_required
 def teacher_courses_view(request):
@@ -124,8 +125,6 @@ def teacher_courses_view(request):
         'search_query': search_query,  # Pass the query back to the template
     }
     return render(request, 'courses_app/teacher_courses.html', context)
-
-
 
 @login_required
 def create_course_view(request):
@@ -198,7 +197,6 @@ def student_homepage_view(request):
     return render(request, 'courses_app/student_homepage.html', context)
 
 
-
 @login_required
 def student_courses_view(request):
     if not request.user.is_student:
@@ -208,7 +206,7 @@ def student_courses_view(request):
     # Fetch all the enrolled courses (including blocked courses)
     enrolled_courses = Enrollment.objects.filter(student=request.user).select_related('course')
 
-    # Fetch all available courses (Courses the student is not enrolled in)
+    # Fetch all available courses (including courses the student is not enrolled in)
     available_courses = Course.objects.exclude(enrollments__student=request.user)
 
     # Search functionality for enrolled and available courses
@@ -233,7 +231,7 @@ def student_courses_view(request):
             'completed_materials': completed_materials,
             'completed_percent': (completed_materials / total_materials * 100) if total_materials > 0 else 0,
             'is_completed': is_completed,
-            'is_blocked': enrollment.is_blocked,  # Add the is_blocked field
+            'is_blocked': enrollment.is_blocked,
         })
 
     # Build the context
@@ -244,6 +242,7 @@ def student_courses_view(request):
     }
 
     return render(request, 'courses_app/student_courses.html', context)
+
 
 @login_required
 def enroll_course_view(request, course_id):
@@ -284,7 +283,6 @@ def view_enrolled_students_view(request, course_id):
     enrolled_students = Enrollment.objects.filter(course=course).select_related('student')
 
     return render(request, 'courses_app/enrolled_students.html', {'course': course, 'enrolled_students': enrolled_students})
-
 
 
 @login_required
@@ -388,7 +386,6 @@ def teacher_progress_view(request, course_id):
     return render(request, 'courses_app/teacher_progress.html', context)
 
 
-
 @login_required
 def course_materials_view(request, course_id):
     course = get_object_or_404(Course, id=course_id, students=request.user)
@@ -418,14 +415,14 @@ def course_materials_view(request, course_id):
         ).count()
 
         if total_materials > 0 and completed_materials == total_materials:
-            print(f"✅ {request.user.username} has completed {course.name}. Sending notification...")  # Debugging
+            print(f"✅ {request.user.username} has completed {course.name}. Sending notification...")  # Debugging..
 
             # Notify the teacher
             notification = Notification.objects.create(
                 recipient=course.teacher,
                 message=f"{request.user.username} has completed the course '{course.name}'!"
             )
-            notification.save()  # ✅ Explicitly saving the instance (optional but good practice)
+            notification.save()
 
         messages.success(request, f'Marked "{material.title}" as complete!')
         return redirect('course_materials', course_id=course.id)
@@ -533,6 +530,7 @@ def course_detail_view(request, course_id):
         'total_materials': total_materials,
     })
 
+
 @login_required
 def post_status_update_view(request):
     if request.method == 'POST':
@@ -551,6 +549,7 @@ def post_status_update_view(request):
 
 def is_teacher(user):
     return user.is_authenticated and user.is_teacher
+
 
 @login_required
 @user_passes_test(is_teacher)
