@@ -49,27 +49,3 @@ def chat_room(request, username):
         'room_name': room_name,
         'messages': messages,
     })
-
-
-# def chat_home(request):
-#     # Get search query
-#     search_query = request.GET.get("search", "").strip()
-    
-#     # Filter users based on search query (if provided)
-#     users = User.objects.all()
-#     if search_query:
-#         users = users.filter(
-#             Q(username__icontains=search_query) |
-#             Q(first_name__icontains=search_query) |
-#             Q(last_name__icontains=search_query)
-#         )
-    
-#     # Separate users into Teachers and Students
-#     teachers = users.filter(is_teacher=True)
-#     students = users.filter(is_student=True)
-
-#     return render(request, "realtime_app/chat_home.html", {
-#         "teachers": teachers,
-#         "students": students,
-#         "search_query": search_query,
-#     })
