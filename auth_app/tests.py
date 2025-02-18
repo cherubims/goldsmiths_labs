@@ -25,8 +25,6 @@ class UserRegistrationTests(APITestCase):
         # Allow both 200 and 201 for success
         self.assertIn(response.status_code, [status.HTTP_200_OK, status.HTTP_201_CREATED])
 
-
-
     def test_register_existing_user(self):
         """Test registering a username that already exists"""
         User.objects.create_user(username="existinguser", email="user@example.com", password="securepassword")
@@ -62,8 +60,6 @@ class UserRegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class UserLoginTests(APITestCase):
 
     def setUp(self):
@@ -91,7 +87,6 @@ class UserLoginTests(APITestCase):
         self.assertIn(response.status_code, [status.HTTP_400_BAD_REQUEST, status.HTTP_401_UNAUTHORIZED])
 
 
-
 class UserProfileTests(APITestCase):
 
     def setUp(self):
@@ -106,7 +101,6 @@ class UserProfileTests(APITestCase):
         image.save(image_io, format="JPEG")
         image_io.seek(0)
         return SimpleUploadedFile("test.jpg", image_io.read(), content_type="image/jpeg")
-
 
 
 class APITests(APITestCase):

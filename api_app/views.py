@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register_user(request):
-    """API to Register a New User"""
+    """Endpoint to Register a New User"""
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -25,7 +25,7 @@ def register_user(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_user(request):
-    """API to Log In a User and Get a Token"""
+    """Endpoint to Log In a User and Get a Token"""
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
         user = authenticate(username=serializer.validated_data['username'], password=serializer.validated_data['password'])
@@ -37,27 +37,24 @@ def login_user(request):
 
 @api_view(['POST'])
 def logout_user(request):
-    """API to Log Out a User"""
+    """Endpoint to Log Out a User"""
     request.user.auth_token.delete()
     logout(request)
     return Response({"message": "Successfully logged out"})
 
 @api_view(['GET'])
 def course_list_api(request):
-    """API to fetch all courses"""
+    """Endpoint to fetch all courses"""
     courses = Course.objects.all()
     serializer = CourseSerializer(courses, many=True)
     return Response(serializer.data)
-
 
 class MaterialListCreateView(generics.ListCreateAPIView):
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
 
-
-
 class ProgressListCreateView(generics.ListCreateAPIView):
-    """API to Fetch and Update Student Progress"""
+    """Endpoint to Fetch and Update Student Progress"""
     queryset = Progress.objects.all()
     serializer_class = ProgressSerializer
     permission_classes = [IsAuthenticated]
@@ -65,9 +62,8 @@ class ProgressListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(student=self.request.user)
 
-
 class FeedbackListCreateView(generics.ListCreateAPIView):
-    """API to Fetch and Submit Feedback"""
+    """Endpoint to Fetch and Submit Feedback"""
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
     permission_classes = [IsAuthenticated]
@@ -75,9 +71,8 @@ class FeedbackListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(student=self.request.user)
 
-
 class NotificationListView(generics.ListAPIView):
-    """API to Fetch User Notifications"""
+    """Endpoint to Fetch User Notifications"""
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
 
@@ -85,7 +80,7 @@ class NotificationListView(generics.ListAPIView):
         return Notification.objects.filter(recipient=self.request.user).order_by('-created_at')
 
 class MarkNotificationAsReadView(generics.UpdateAPIView):
-    """API to Mark a Notification as Read"""
+    """Endpoint to Mark a Notification as Read"""
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]

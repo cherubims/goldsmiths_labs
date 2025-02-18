@@ -33,17 +33,17 @@ urlpatterns = [
     path('login/', login_user, name='login_api'),
     path('logout/', logout_user, name='logout_api'),
     
-    # Courses API
+    # Courses Endpoint
     path('courses/', course_list_api, name='course_list_api'),
     path('courses/<int:course_id>/materials/', MaterialListCreateView.as_view(), name='course-materials-api'),
     
-    # Progress API
+    # Progress Endpoint
     path('progress/', ProgressListCreateView.as_view(), name='progress_api'),
     
-    # Feedback API
+    # Feedback Endpoint
     path('feedback/', FeedbackListCreateView.as_view(), name='feedback_api'),
     
-    # Notifications API
+    # Notifications Endpoint
     path('notifications/', NotificationListView.as_view(), name='notifications_api'),
     path('notifications/<int:pk>/mark-as-read/', MarkNotificationAsReadView.as_view(), name='mark_notification_read_api'),
     

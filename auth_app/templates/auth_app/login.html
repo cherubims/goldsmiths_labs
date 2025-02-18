@@ -4,49 +4,6 @@
 {% load widget_tweaks %}
 {% block content %}
 
-<!-- Add fade-in animation styles -->
-<style>
-    #page-content {
-        transition: opacity 1s ease-in;
-    }
-    body.loaded #page-content {
-        opacity: 1;
-    }
-
-    /* Styling for the input text */
-    .form-control {
-        font-size: 0.8rem; /* Smaller font size */
-        color: #6c757d; /* Dark gray color */
-        border: 1px solid #ddd; /* Light gray border */
-        padding: 0.75rem 1rem; /* Comfortable padding */
-    }
-
-    /* Placeholder text styling */
-    .form-control::placeholder {
-        color: #adb5bd; /* Light gray placeholder */
-        opacity: 1; /* Ensure full visibility */
-        font-size: 0.8rem;
-    }
-
-    /* Input focus state */
-    .form-control:focus {
-        border-color: #6a11cb; /* Matching theme color */
-        box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25); /* Subtle shadow */
-    }
-
-    /* Adjust label font size */
-    .form-floating > label {
-        font-size: 0.85rem; /* Smaller label size */
-        color: #6c757d; /* Match input text */
-    }
-
-    /* Button styling */
-    .btn-primary {
-        font-size: 0.9rem; /* Smaller button font size */
-        padding: 0.75rem; /* Adjust padding */
-    }
-</style>
-
 <!-- Form Section -->
 <div class="container p-3 p-md-4 p-xl-5">
     <div class="row justify-content-center">
@@ -106,6 +63,47 @@
     </div>
 </div>
 
+<style>
+    #page-content {
+        transition: opacity 1s ease-in;
+    }
+    body.loaded #page-content {
+        opacity: 1;
+    }
+
+    /* Styling for the input text */
+    .form-control {
+        font-size: 0.8rem; /* Smaller font size */
+        color: #6c757d; /* Dark gray color */
+        border: 1px solid #ddd; /* Light gray border */
+        padding: 0.75rem 1rem; /* Comfortable padding */
+    }
+
+    /* Placeholder text styling */
+    .form-control::placeholder {
+        color: #adb5bd; /* Light gray placeholder */
+        opacity: 1; /* Ensure full visibility */
+        font-size: 0.8rem;
+    }
+
+    /* Input focus state */
+    .form-control:focus {
+        border-color: #6a11cb; /* Matching theme color */
+        box-shadow: 0 0 0 0.2rem rgba(106, 17, 203, 0.25); /* Subtle shadow */
+    }
+
+    /* Adjust label font size */
+    .form-floating > label {
+        font-size: 0.85rem; /* Smaller label size */
+        color: #6c757d; /* Match input text */
+    }
+
+    /* Button styling */
+    .btn-primary {
+        font-size: 0.9rem; /* Smaller button font size */
+        padding: 0.75rem; /* Adjust padding */
+    }
+</style>
 
 <script>
     // Fade-in effect for the entire page
